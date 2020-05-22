@@ -1,0 +1,10 @@
+# JetBrains IDE project folder
+.idea
+
+# Compiled binaries and object files
+*.com
+*.err
+*.exe
+*.o
+*.obj
+
