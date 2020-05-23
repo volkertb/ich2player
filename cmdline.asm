@@ -1,6 +1,4 @@
-comment %
-	Simple command line examination routine.  
-%
+;	Simple command line examination routine.
 
 
         .DOSSEG

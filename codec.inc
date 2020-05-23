@@ -1,17 +1,15 @@
-comment %
-
-
-Codec registers.
-
-Not all codecs are created equal. Refer to the spec for your specific codec.
-
-All registers are 16bits wide.  Access to codec registers over the AC97 link
-is defined by the OEM.  
-
-
-Secondary codec's are accessed by ORing in BIT7 of all register accesses.
-
-%
+;
+;
+; Codec registers.
+;
+; Not all codecs are created equal. Refer to the spec for your specific codec.
+;
+; All registers are 16bits wide.  Access to codec registers over the AC97 link
+; is defined by the OEM.
+;
+;
+; Secondary codec's are accessed by ORing in BIT7 of all register accesses.
+;
 
 ; each codec/mixer register is 16bits
 

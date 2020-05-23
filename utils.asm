@@ -1,9 +1,7 @@
-comment %
-
-Non platform specific utilites.
-
-
-%
+;
+; Non platform specific utilites.
+;
+;
         .DOSSEG
         .MODEL  small, c, os_dos
 

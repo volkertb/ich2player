@@ -1,16 +1,14 @@
-comment %
-
-Intel 81x ICHx .wav player for DOS.
-
-
-Notice:  This program was generated for the ICH2 southbridge AC97 audio
-	 device.  It is assumed that ICH0 and ICH1's are compatible.
-
-	 The software does a PCI scan looking for the ICH2 device ID (2445)
-	 and only this device.  Code will have to be modified to support
-	 other ICH devices.
-
-%
+;
+; Intel 81x ICHx .wav player for DOS.
+;
+;
+; Notice:  This program was generated for the ICH2 southbridge AC97 audio
+;	 device.  It is assumed that ICH0 and ICH1's are compatible.
+;
+;	 The software does a PCI scan looking for the ICH2 device ID (2445)
+;	 and only this device.  Code will have to be modified to support
+;	 other ICH devices.
+;
 
        	.DOSSEG
         .MODEL  small, c, os_dos

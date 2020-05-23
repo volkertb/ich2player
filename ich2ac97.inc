@@ -1,10 +1,8 @@
-comment %
-
-
-Intel ICH2 equates.  It is assumed that ICH0 and plain ole ICH are compatible.
-
-
-%
+;
+;
+; Intel ICH2 equates.  It is assumed that ICH0 and plain ole ICH are compatible.
+;
+;
 
 
 ; PCI stuff

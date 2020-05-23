@@ -1,8 +1,6 @@
-comment %
-
- memory management routines
-
-%
+;
+; memory management routines
+;
 
 
 

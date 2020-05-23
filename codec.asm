@@ -1,17 +1,15 @@
-comment %
- codec configuration code.  Not much here really.
-
-
- improvements to be made:  Adjustable volume control for output.  Code
- below just maxes everything out (I commented it out so you don't blame me
- for blowing up your speakers)
-
- The delay1_4ms routines are just wait loops to let the codec handle the request.
- I think there's a status bit somewhere you can poll to know when it's safe
- to talk to the mixer registers, but a little waiting never hurt anyone.
- 
-
-%
+; codec configuration code.  Not much here really.
+;
+;
+; improvements to be made:  Adjustable volume control for output.  Code
+; below just maxes everything out (I commented it out so you don't blame me
+; for blowing up your speakers)
+;
+; The delay1_4ms routines are just wait loops to let the codec handle the request.
+; I think there's a status bit somewhere you can poll to know when it's safe
+; to talk to the mixer registers, but a little waiting never hurt anyone.
+;
+;
        	.DOSSEG
         .MODEL  small, c, os_dos
 

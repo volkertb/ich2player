@@ -1,7 +1,5 @@
-comment %
-
-	PCI device register reader/writers.
-%
+;
+;	PCI device register reader/writers.
 
 
         .DOSSEG

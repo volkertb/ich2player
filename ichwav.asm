@@ -1,9 +1,7 @@
-comment %
-
-        DOS based .WAV player using AC'97 and codec interface.
-
-
-%
+;
+;        DOS based .WAV player using AC'97 and codec interface.
+;
+;
 
        	.DOSSEG
         .MODEL  small, c, os_dos

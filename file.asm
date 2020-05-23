@@ -1,9 +1,7 @@
-comment %
-
-file support routines.
-
-
-%
+;
+; file support routines.
+;
+;
 
 	.DOSSEG
         .MODEL  small, c, os_dos
