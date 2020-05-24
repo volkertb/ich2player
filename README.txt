@@ -1,12 +1,15 @@
 .wav file player for DOS
 
+Originally developed and shared by:
+
 jeff leyda
 jeff@silent.net
 sep 02 2002
 
+(With some small modifications/additions made by Volkert de Buisonjé)
 
-
-Uses the Intel 810 or 815 chipset (or anything with the ICH2 southbridge)
+Uses AC'97 audio on supported Intel chipsets
+(ICH/ICH0/ICH2/ICH3/ICH4/ICH5/ESB/ICH6/ICH7 southbridge, or 440MX chipset)
 No drivers required. (there aren't any for DOS anyway!)
 
 
@@ -29,9 +32,11 @@ data chunks, and it also assumes that there is only 1 data chunk in the file.
 where I knew the format of the .wav file was never going to vary, so I didn't
 implement proper .wav header parsing.  You get what you pay for.]
 
-2) ONLY supports the ICH2 chip at the moment.  Other ICHes (ICHi?) should be
-compatible with the the ICH2 but I don't have any to test with so I can't
-really add support for it.  
+2) Only the ICH2 chip has been tested on real hardware at the moment. The older
+(first generation) ICH has been successfully tested in both QEMU+KVM and
+VirtualBox VMs, but has yet to be tested on actual hardware. Other ICHes (up to
+ICH7) should be compatible with the the ICH2 but these haven't been tested yet.
+If you have tested with any of these chipsets, please share your findings!
 
 3) ONLY supports 16bit samples, stereo format .wav files.  Multiple sample
 rates are supported.
@@ -60,7 +65,13 @@ time.)
 
 4) No volume adjusts are done by the codec.  Your mixer and codec might
 default to muted and/or off when you boot into DOS.  See the file codec.asm
-as to where you can change this easily. 
+as to where you can change this easily.
+
+
+5) The detection routine seems to be quite slow, at least in a QEMU VM or when
+running in DOSBox. The detection speed might be better on actual hardware,
+though. If anybody knows a way to speed up the detection process, please share
+how.
 
 
 -----------------------------------------------------------------------------
@@ -152,6 +163,9 @@ as much support as you need.
 
 It's compiled with microsoft assembler 6.11, linked with microsoft linker.
 To compile it, just type "nmaker", provided MASM is in your path.
+Alternatively, the source can be built with the Open Watcom toolchain as well.
+To do so, make sure WASM and WLINK are in your path and then run
+./make-with-open-watcom.sh or owmake.bat (depending on your OS).
 
 
 file list:
@@ -167,6 +181,11 @@ utils.asm    - non platform specific support routines
 memalloc.asm - memory allocation/deallocation
 constant.inc - global equates
 
+added later:
+owmake.bat               - a batch file that can build the executable using the
+                           Open Watcom assembler instead of MASM (DOS/win32)
+make-with-open-watcom.sh - a shell script that can build the executable using
+                           the Open Watcom assembler instead of MASM (posix)
 
 
 Could this code be used to make a device driver to support DOS games?  Dunno.
