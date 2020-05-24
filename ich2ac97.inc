@@ -6,12 +6,33 @@
 
 
 ; PCI stuff
-
+; Relevant sources:
+; * https://en.wikipedia.org/wiki/I/O_Controller_Hub
+; * https://pci-ids.ucw.cz/read/PC/8086
+; * https://pcilookup.com
+; * https://ark.intel.com/content/www/us/en/ark.html
+;
+; To summerize the AC'97 audio support in the various Intel chipsets (specifically southbridges):
+;
+; * ICH is the first generation to support AC'97
+; * There is no "ICH1", "ICH0" is basically the second generation, coming between "ICH" and "ICH2"
+; * The Enterprise Southbridge (ESB) is an ICH5-variant with a different device ID for its AC'97 Audio Controller
+; * ICH6 and ICH7 support both AC'97 and Intel HD Audio
+; * ICH7 is the last generation to support AC'97 Audio (ICH8 and onwards support Intel HD Audio only)
+; * The 440MX is not in the ICH family, but does support AC'97 Audio (mobile chipset with integrated north/southbridge)
+;
 INTEL_VID       equ     8086h           ; Intel's PCI vendor ID
-ICH_DID         equ     2415h           ; ICH device ID
-ICH0_DID        equ     2425h           ; ICH0
-ICH2_DID        equ     2445h           ; ICH2  I think there are more ICHes.
-                                        ; they all should be compatible.
+ICH_DID         equ     2415h           ; device ID: 82801AA AC'97 Audio Controller (ICH)
+ICH0_DID        equ     2425h           ; device ID: 82801AB AC'97 Audio Controller (ICH0)
+ICH2_DID        equ     2445h           ; device ID: 82801BA/BAM AC'97 Audio Controller (ICH2)
+ICH3_DID        equ     2485h           ; device ID: 82801CA/CAM AC'97 Audio Controller (ICH3)
+ICH4_DID        equ     24c5h           ; device ID: 82801DB/DBL/DBM AC'97 Audio Controller (ICH4)
+ICH5_DID        equ     24d5h           ; device ID: 82801EB/ER AC'97 Audio Controller (ICH5)
+ESB_DID         equ     25a6h           ; device ID: 6300ESB AC'97 Audio Controller (ESB)
+ICH6_DID        equ     266eh           ; device ID: 82801FB/FBM/FR/FW/FRW AC'97 Audio Controller (ICH6)
+ICH7_DID        equ     27deh           ; device ID: 82801GB/GBM/GR/GH/GHM AC'97 Audio Controller (ICH7)
+I440MX_DID      equ     7195h           ; device ID: 82440MX AC'97 Audio Controller (440MX)
+                                        ; TODO: add any non-Intel AC'97 audio devices that are compatible as well
 
 NAMBAR_REG      equ     10h             ; native audio mixer BAR
  NAM_SIZE       equ     256             ; 256 bytes required.

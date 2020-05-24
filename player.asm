@@ -76,25 +76,107 @@ FILESIZE        equ     64 * 1024       ; 64k file buffer size.
 ; You may need to change this ICH2 device ID scan to match your hardware, or
 ; better yet, change it to support multiple devices.
 ;
+; UPDATE 2020-05-23: Support for the regular ICH implementation has been
+;                    successfully tested with emulated AC'97 ICH devices in
+;                    both QEMU and VirtualBox VMs.
+;                    ICH0 hasn't been tested yet at this point, but since its
+;                    age technology-wise is between ICH and ICH2, it's
+;                    reasonable to assume that it will work as well.
+;                    Support for ICH3 through ICH7 has been added as well, as
+;                    well as ESB (an ICH5 variant) and the 82440MX (440MX)
+;                    mobile chipset. All currently untested. We'll scan
+;                    for all these variants. (Can take up to 10 seconds, at
+;                    least in DOSBox and QEMU. Suggestions to speed up the
+;                    detection process would be greatly appreciated.)
+;                    In the future, this "whitelist" may be expanded to include
+;                    additional compatible AC'97 variants, not just from Intel.
+;                    If anybody reading this comment happens to have an actual
+;                    PC with any ICH AC'97 implementation and would be willing
+;                    to test this software with it, that would be great! :)
+;
+        ; Check for an ICH southbridge
+        lea     dx, ichDetectedMsg
+        mov     eax, (ICH_DID shl 16) + INTEL_VID
+        call    pciFindDevice
+        jnc     @f
+
+        ; Check for an ICH0 southbridge
+        lea     dx, ich0DetectedMsg
+        mov     eax, (ICH0_DID shl 16) + INTEL_VID
+        call    pciFindDevice
+        jnc     @f
+
+        ; Check for an ICH2 southbridge
+        lea     dx, ich2DetectedMsg
         mov     eax, (ICH2_DID shl 16) + INTEL_VID
         call    pciFindDevice
         jnc     @f
 
+        ; Check for an ICH3 southbridge
+        lea     dx, ich3DetectedMsg
+        mov     eax, (ICH3_DID shl 16) + INTEL_VID
+        call    pciFindDevice
+        jnc     @f
 
+        ; Check for an ICH4 southbridge
+        lea     dx, ich4DetectedMsg
+        mov     eax, (ICH4_DID shl 16) + INTEL_VID
+        call    pciFindDevice
+        jnc     @f
 
-; couldn't find the audio device!
+        ; Check for an ICH5 southbridge
+        lea     dx, ich5DetectedMsg
+        mov     eax, (ICH5_DID shl 16) + INTEL_VID
+        call    pciFindDevice
+        jnc     @f
+
+        ; Check for an Enterprise Southbridge (ESB)
+        lea     dx, esbDetectedMsg
+        mov     eax, (ESB_DID shl 16) + INTEL_VID
+        call    pciFindDevice
+        jnc     @f
+
+        ; Check for an ICH6 southbridge
+        lea     dx, ich6DetectedMsg
+        mov     eax, (ICH6_DID shl 16) + INTEL_VID
+        call    pciFindDevice
+        jnc     @f
+
+        ; Check for an ICH7 southbridge
+        lea     dx, ich7DetectedMsg
+        mov     eax, (ICH7_DID shl 16) + INTEL_VID
+        call    pciFindDevice
+        jnc     @f
+
+        ; Check for a 440MX chipset
+        lea     dx, immx440DetectedMsg
+        mov     eax, (I440MX_DID shl 16) + INTEL_VID
+        call    pciFindDevice
+        jnc     @f
+
+; couldn't find any supported audio device!
 
 	push	cs
 	pop	ds
-        lea     dx, noICH2Msg
+        lea     dx, noDevMsg
         mov     ah, 9
         int     21h
         jmp     exit
 
-noICH2Msg db "Error: Unable to find intel ICH2 based audio device!",CR,LF,"$"
+noDevMsg db "Error: Unable to find any supported AC'97 audio device!",CR,LF,"$"
 
 @@:
 
+; Report whatever device has been detected at this point
+; (dx should now be pointing to the message corresponding to the detected device)
+	push ds
+	push ax
+    mov ax,@data
+    mov ds,ax
+        mov     ah, 9
+        int     21h
+    pop ax
+    pop ds
 
 
 ; get ICH base address regs for mixer and bus master
@@ -193,6 +275,26 @@ WAV_BUFFER1     dw      0               ; segment of our WAV storage
 WAV_BUFFER2	dw	0		; segment of 2nd wav buffer
 NAMBAR          dw      0               ; BAR for mixer
 NABMBAR         dw      0               ; BAR for bus master regs
+
+ichDetectedMsg db     "Intel 82801AA AC'97 Audio Controller (ICH) detected.",CR,LF,
+                      "(Model tested in VMs only, let me know whether it works with real hardware or not!)",CR,LF,"$"
+ich0DetectedMsg db    "Intel 82801AB AC'97 Audio Controller (ICH0) detected.",CR,LF,
+                      "(Untested model, let me know whether it works or not!)",CR,LF,"$"
+ich2DetectedMsg db    "82801BA/BAM AC'97 Audio Controller (ICH2) detected.",CR,LF,"$"
+ich3DetectedMsg db    "82801CA/CAM AC'97 Audio Controller (ICH3) detected.",CR,LF,
+                      "(Untested model, let me know whether it works or not!)",CR,LF,"$"
+ich4DetectedMsg db    "82801DB/DBL/DBM AC'97 Audio Controller (ICH4) detected.",CR,LF,
+                      "(Untested model, let me know whether it works or not!)",CR,LF,"$"
+ich5DetectedMsg db    "82801EB/ER AC'97 Audio Controller (ICH5) detected.",CR,LF,
+                      "(Untested model, let me know whether it works or not!)",CR,LF,"$"
+esbDetectedMsg db     "6300ESB AC'97 Audio Controller (ESB) detected.",CR,LF,
+                      "(Untested model, let me know whether it works or not!)",CR,LF,"$"
+ich6DetectedMsg db    "82801FB/FBM/FR/FW/FRW AC'97 Audio Controller (ICH6) detected.",CR,LF,
+                      "(Untested model, let me know whether it works or not!)",CR,LF,"$"
+ich7DetectedMsg db    "82801GB/GBM/GR/GH/GHM AC'97 Audio Controller (ICH7) detected.",CR,LF,
+                      "(Untested model, let me know whether it works or not!)",CR,LF,"$"
+immx440DetectedMsg db "82440MX AC'97 Audio Controller (MX440) detected.",CR,LF,
+                      "(Untested model, let me know whether it works or not!)",CR,LF,"$"
 
 End
 
