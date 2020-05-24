@@ -205,7 +205,8 @@ noDevMsg db "Error: Unable to find any supported AC'97 audio device!",CR,LF,"$"
 
         push    ds
         call    processCmdline			; get the filename
-
+        ; keep the change_volume parameter in BH, for calling codecConfig later
+        mov bh,ah
 
 ; open the file
         

@@ -16,6 +16,9 @@ No drivers required. (there aren't any for DOS anyway!)
 
 Usage: player <wavfile.wav>
 
+Or, to maximize the codec output volume before playing (be careful!):
+
+       player /v <wavfile.wav>
 
 To stop playback, press either SHIFT key.  
 
@@ -63,9 +66,13 @@ fact I suggest using himem.sys and smartdrv.exe to speed up initial file load
 time.)
 
 
-4) No volume adjusts are done by the codec.  Your mixer and codec might
-default to muted and/or off when you boot into DOS.  See the file codec.asm
-as to where you can change this easily.
+4) No volume adjustments are made to the codec by default.  Your mixer and
+codec might default to muted and/or off when you boot into DOS. Add "/v" as a
+first parameter (before the WAV file path argument) to force the player to set
+the volume to maximum before playing the file. Be careful about turning down
+the volume knob of your speakers first, though! Also, this volume will then
+remain at that level until you either reboot your system or use some other
+utility to adjust the codec volume further.
 
 
 5) The detection routine seems to be quite slow, at least in a QEMU VM or when
