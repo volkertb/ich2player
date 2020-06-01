@@ -193,13 +193,13 @@ cmdline.asm  - command line parser
 utils.asm    - non platform specific support routines
 memalloc.asm - memory allocation/deallocation
 constant.inc - global equates
-printhex.asm - routines for displaying hex values on the console
 
 added later:
 owmake.bat               - a batch file that can build the executable using the
                            Open Watcom assembler instead of MASM (DOS/win32)
 make-with-open-watcom.sh - a shell script that can build the executable using
                            the Open Watcom assembler instead of MASM (posix)
+printhex.asm             - routines for displaying hex values on the console
 
 
 Could this code be used to make a device driver to support DOS games?  Dunno.
