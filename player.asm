@@ -24,6 +24,7 @@
 
 	extern	setFree:NEAR
         extern  pciFindDevice:NEAR
+        extern  pciRegRead32:NEAR
         extern  pciRegRead16:NEAR
         extern  pciRegRead8:NEAR
         extern  pciRegWrite8:NEAR
@@ -35,6 +36,7 @@
         extern  filehandle:WORD
         extern  playWav:NEAR
         extern  getSampleRate:NEAR
+        extern  print16BitHexValue:NEAR
 
 
 ; player internal variables and other equates.
@@ -169,15 +171,26 @@ noDevMsg db "Error: Unable to find any supported AC'97 audio device!",CR,LF,"$"
 
 ; Report whatever device has been detected at this point
 ; (dx should now be pointing to the message corresponding to the detected device)
-	push ds
-	push ax
-    mov ax,@data
-    mov ds,ax
-        mov     ah, 9
-        int     21h
-    pop ax
-    pop ds
+    call printData
 
+    ; get PCI subsystem info
+        mov al, PCI_SUBSYS_REG
+        call pciRegRead32
+
+    ; Print PCI subsystem info in EAX
+    push eax ; push PCI address
+    mov eax,edx ; mov PCI subsystem info to eax
+    push edx
+    lea dx, subsystemVendorIdMsg
+    call printData ; needs only DX pointing to variable
+    call print16BitHexValue ; prints whatever is in AX right now
+    pop edx
+    rol edx,16 ; move the high word of EDX to DX
+    mov ax,dx
+    lea dx, subsystemIdMsg
+    call printData ; needs only DX pointing to variable
+    call print16BitHexValue ; prints whatever is in AX right now
+    pop eax ; pop PCI address
 
 ; get ICH base address regs for mixer and bus master
 
@@ -192,7 +205,6 @@ noDevMsg db "Error: Unable to find any supported AC'97 audio device!",CR,LF,"$"
         and     dx, IO_ADDR_MASK
 
         mov     ds:[NABMBAR], dx                ; save bus master base addy
-
         
         mov     al, PCI_CMD_REG
         call    pciRegRead8                     ; read PCI command register
@@ -263,7 +275,16 @@ exit:
         mov     ax, 4c00h
 	int 	21h
 
-
+; Entry: DX points to variable in the .DATA section of this file (the variable you with to be printed to screen)
+printData proc public
+    pusha
+    mov ax,@data
+    mov ds,ax
+    mov     ah, 9
+    int     21h
+    popa
+    ret
+printData endp
 
 .DATA
 public  BDL_BUFFER                      ; 256 byte buffer for descriptor list
@@ -278,25 +299,53 @@ NAMBAR          dw      0               ; BAR for mixer
 NABMBAR         dw      0               ; BAR for bus master regs
 
 ichDetectedMsg db     "Intel 82801AA AC'97 Audio Controller (ICH) detected.",CR,LF,
-                      "(Model tested in VMs only, let me know whether it works with real hardware or not!)",CR,LF,"$"
+                      "PCI Vendor ID             : 8086h",CR,LF,
+                      "PCI Device ID             : 2415h",CR,LF,"$"
+
 ich0DetectedMsg db    "Intel 82801AB AC'97 Audio Controller (ICH0) detected.",CR,LF,
-                      "(Untested model, let me know whether it works or not!)",CR,LF,"$"
-ich2DetectedMsg db    "82801BA/BAM AC'97 Audio Controller (ICH2) detected.",CR,LF,"$"
+                      "(Untested model, let me know on GitHub whether it works or not!)",CR,LF,
+                      "PCI Vendor ID             : 8086h",CR,LF,
+                      "PCI Device ID             : 2425h",CR,LF,"$"
+
+ich2DetectedMsg db    "82801BA/BAM AC'97 Audio Controller (ICH2) detected.",CR,LF,
+                      "PCI Vendor ID             : 8086h",CR,LF,
+                      "PCI Device ID             : 2445h",CR,LF,"$"
+
 ich3DetectedMsg db    "82801CA/CAM AC'97 Audio Controller (ICH3) detected.",CR,LF,
-                      "(Untested model, let me know whether it works or not!)",CR,LF,"$"
+                      "PCI Vendor ID             : 8086h",CR,LF,
+                      "PCI Device ID             : 2485h",CR,LF,"$"
+
 ich4DetectedMsg db    "82801DB/DBL/DBM AC'97 Audio Controller (ICH4) detected.",CR,LF,
-                      "(Untested model, let me know whether it works or not!)",CR,LF,"$"
+                      "(Untested model, let me know on GitHub whether it works or not!)",CR,LF,
+                      "PCI Vendor ID             : 8086h",CR,LF,
+                      "PCI Device ID             : 24c5h",CR,LF,"$"
+
 ich5DetectedMsg db    "82801EB/ER AC'97 Audio Controller (ICH5) detected.",CR,LF,
-                      "(Untested model, let me know whether it works or not!)",CR,LF,"$"
+                      "(Untested model, let me know on GitHub whether it works or not!)",CR,LF,
+                      "PCI Vendor ID             : 8086h",CR,LF,
+                      "PCI Device ID             : 24d5h",CR,LF,"$"
+
 esbDetectedMsg db     "6300ESB AC'97 Audio Controller (ESB) detected.",CR,LF,
-                      "(Untested model, let me know whether it works or not!)",CR,LF,"$"
+                      "(Untested model, let me know on GitHub whether it works or not!)",CR,LF,
+                      "PCI Vendor ID             : 8086h",CR,LF,
+                      "PCI Device ID             : 25a6h",CR,LF,"$"
+
 ich6DetectedMsg db    "82801FB/FBM/FR/FW/FRW AC'97 Audio Controller (ICH6) detected.",CR,LF,
-                      "(Untested model, let me know whether it works or not!)",CR,LF,"$"
+                      "(Untested model, let me know on GitHub whether it works or not!)",CR,LF,
+                      "PCI Vendor ID             : 8086h",CR,LF,
+                      "PCI Device ID             : 266eh",CR,LF,"$"
+
 ich7DetectedMsg db    "82801GB/GBM/GR/GH/GHM AC'97 Audio Controller (ICH7) detected.",CR,LF,
-                      "(Untested model, let me know whether it works or not!)",CR,LF,"$"
+                      "(Untested model, let me know on GitHub whether it works or not!)",CR,LF,
+                      "PCI Vendor ID             : 8086h",CR,LF,
+                      "PCI Device ID             : 27deh",CR,LF,"$"
+
 immx440DetectedMsg db "82440MX AC'97 Audio Controller (MX440) detected.",CR,LF,
-                      "(Untested model, let me know whether it works or not!)",CR,LF,"$"
+                      "(Untested model, let me know on GitHub whether it works or not!)",CR,LF,
+                      "PCI Vendor ID             : 8086h",CR,LF,
+                      "PCI Device ID             : 7195h",CR,LF,"$"
+
+subsystemIdMsg db       "Device Subsystem ID       : $"
+subsystemVendorIdMsg db "Device Subsystem Vendor ID: $"
 
 End
-
-

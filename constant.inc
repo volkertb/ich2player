@@ -87,6 +87,7 @@ PCI_FN6         EQU     (6 shl 8)
 PCI_FN7         EQU     (7 shl 8)
 
 PCI_CMD_REG		EQU	04h		; reg 04, command reg
+PCI_SUBSYS_REG	EQU 2Ch 	; reg 2C, subsystem reg
  IO_ENA			EQU	BIT0		; i/o decode enable
  MEM_ENA		EQU	BIT1		; memory decode enable
  BM_ENA                 EQU     BIT2		; bus master enable

@@ -106,6 +106,8 @@ information required to figure this thing out.
 
 5) various .wav file format specs available everywhere on the web.
 
+6) an excellent PCI programming guide at
+https://www.waste.org/~winkles/hardware/pci.htm
 
 
 ------------------------------------------------------------------------------
