@@ -10,6 +10,20 @@
 
         INCLUDE constant.inc
 
+; Copied from https://www.waste.org/~winkles/hardware/pci.htm
+; Entry: none
+; Exit: Zero Flag (ZF) set if PCI BIOS detected
+pciBusDetect proc public
+        push ax
+        push edx
+        mov     ax, PCI_BIOS_PRESENT ; interrupt 1a function b101
+        int     PCI_BIOS_INT         ; will tell us if there is a PCI
+        cmp     edx," ICP"           ; bus on the board.
+        pop edx
+        pop ax
+        ret
+pciBusDetect endp
+
 ;===============================================================
 ; 8/16/32bit PCI reader
 ;

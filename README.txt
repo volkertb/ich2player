@@ -107,7 +107,10 @@ information required to figure this thing out.
 5) various .wav file format specs available everywhere on the web.
 
 6) an excellent PCI programming guide at
-https://www.waste.org/~winkles/hardware/pci.htm
+https://www.waste.org/~winkles/hardware/pci.htm (also by Jeff, coincidentally)
+
+7) List of PCI BIOS function IDs in the FreeBSD source code:
+https://github.com/freebsd/freebsd/blob/master/sys/i386/include/pc/bios.h
 
 
 ------------------------------------------------------------------------------

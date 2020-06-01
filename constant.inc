@@ -90,4 +90,7 @@ PCI_CMD_REG		EQU	04h		; reg 04, command reg
 PCI_SUBSYS_REG	EQU 2Ch 	; reg 2C, subsystem reg
  IO_ENA			EQU	BIT0		; i/o decode enable
  MEM_ENA		EQU	BIT1		; memory decode enable
- BM_ENA                 EQU     BIT2		; bus master enable
+ BM_ENA			EQU BIT2		; bus master enable
+
+PCI_BIOS_INT     EQU 1Ah      ; PCI BIOS interface interrupt
+PCI_BIOS_PRESENT EQU 0B101h   ; PCI BIOS funcion to check for presence of PCI BIOS

@@ -23,6 +23,7 @@
         INCLUDE ich2ac97.inc
 
 	extern	setFree:NEAR
+        extern  pciBusDetect:NEAR
         extern  pciFindDevice:NEAR
         extern  pciRegRead32:NEAR
         extern  pciRegRead16:NEAR
@@ -71,7 +72,14 @@ FILESIZE        equ     64 * 1024       ; 64k file buffer size.
 	call	memAlloc
 	mov	ds:[WAV_BUFFER2], ax
 
+        call pciBusDetect
+        jz pci_bios_detected
+pci_bios_not_detected:
+        lea dx, noPciBiosMsg
+        call printData
+        jmp exit
 
+pci_bios_detected:
 
 ; Detect/reset AC97 
 ; I have an ICH2 on my board, you might have an ICH0 or ICH4 or whatever.
@@ -347,5 +355,7 @@ immx440DetectedMsg db "82440MX AC'97 Audio Controller (MX440) detected.",CR,LF,
 
 subsystemIdMsg db       "Device Subsystem ID       : $"
 subsystemVendorIdMsg db "Device Subsystem Vendor ID: $"
+
+noPciBiosMsg db "No PCI bus detected in this system.",CR,LF,"$"
 
 End
