@@ -32,10 +32,10 @@ BROWSE  = 1
 #PACK_SBRS  = 1
 
 FILES  = player.asm codec.asm pci.ASM utils.asm cmdline.asm \
-         memalloc.asm file.asm ichwav.asm 
+         memalloc.asm file.asm ichwav.asm printhex.asm
 
 OBJS  = player.obj codec.obj pci.obj utils.obj cmdline.obj \
-        memalloc.obj file.obj ichwav.obj 
+        memalloc.obj file.obj ichwav.obj printhex.obj
                         	  
 all: $(PROJ).exe
 

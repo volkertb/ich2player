@@ -171,6 +171,7 @@ It's free, do with it what you will. I don't particularly care.
 Feel free to contact me with questions and improvements.  I'm a nice guy and
 I don't expect a flood of email about this to bog me down, so I'll give you
 as much support as you need.
+(NOTE: printhex.asm was added later and is licensed CC BY-SA 3.0)
 
 
 It's compiled with microsoft assembler 6.11, linked with microsoft linker.
@@ -192,6 +193,7 @@ cmdline.asm  - command line parser
 utils.asm    - non platform specific support routines
 memalloc.asm - memory allocation/deallocation
 constant.inc - global equates
+printhex.asm - routines for displaying hex values on the console
 
 added later:
 owmake.bat               - a batch file that can build the executable using the
