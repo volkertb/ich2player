@@ -22,7 +22,7 @@
         INCLUDE constant.inc
         INCLUDE ich2ac97.inc
 
-	extern	setFree:NEAR
+        extern	setFree:NEAR
         extern  pciBusDetect:NEAR
         extern  pciFindDevice:NEAR
         extern  pciRegRead32:NEAR
@@ -30,7 +30,7 @@
         extern  pciRegRead8:NEAR
         extern  pciRegWrite8:NEAR
         extern  codecConfig:NEAR
-	extern	memAlloc:NEAR
+        extern	memAlloc:NEAR
         extern  processCmdline:NEAR
         extern  openFile:NEAR
         extern  closeFile:NEAR
@@ -164,6 +164,12 @@ pci_bios_detected:
         call    pciFindDevice
         jnc     @f
 
+        ; Check for a SiS7012 AC'97 Sound Controller
+        lea     dx, sis7012DetectedMsg
+        mov     eax, (SIS_7012_DID shl 16) + SIS_VID
+        call    pciFindDevice
+        jnc     @f
+
 ; couldn't find any supported audio device!
 
 	push	cs
@@ -176,14 +182,16 @@ pci_bios_detected:
 noDevMsg db "Error: Unable to find any supported AC'97 audio device!",CR,LF,"$"
 
 @@:
+    ; Store the detected device and vendor ID (should still be in eax)
+    mov dword ptr[DETECTED_PCI_DEV],eax
 
-; Report whatever device has been detected at this point
-; (dx should now be pointing to the message corresponding to the detected device)
+    ; Report whatever device has been detected at this point
+    ; (dx should now be pointing to the message corresponding to the detected device)
     call printData
 
     ; get PCI subsystem info
-        mov al, PCI_SUBSYS_REG
-        call pciRegRead32
+    mov al, PCI_SUBSYS_REG
+    call pciRegRead32
 
     ; Print PCI subsystem info in EAX
     push eax ; push PCI address
@@ -299,12 +307,15 @@ public  BDL_BUFFER                      ; 256 byte buffer for descriptor list
 public  WAV_BUFFER1,WAV_BUFFER2         ; 64k buffers for wav file storage
 public  NAMBAR                          ; PCI BAR for mixer registers
 public  NABMBAR                         ; PCI BAR for bus master registers
+public  DETECTED_PCI_DEV                ; The detected PCI device, device+vendor ID
 
 BDL_BUFFER      dw      0               ; segment of our 256byte BDL buffer
 WAV_BUFFER1     dw      0               ; segment of our WAV storage
 WAV_BUFFER2	dw	0		; segment of 2nd wav buffer
 NAMBAR          dw      0               ; BAR for mixer
 NABMBAR         dw      0               ; BAR for bus master regs
+
+DETECTED_PCI_DEV dd     0               ; The detected PCI device, device+vendor ID
 
 ichDetectedMsg db     "Intel 82801AA AC'97 Audio Controller (ICH) detected.",CR,LF,
                       "PCI Vendor ID             : 8086h",CR,LF,
@@ -352,6 +363,11 @@ immx440DetectedMsg db "82440MX AC'97 Audio Controller (MX440) detected.",CR,LF,
                       "(Untested model, let me know on GitHub whether it works or not!)",CR,LF,
                       "PCI Vendor ID             : 8086h",CR,LF,
                       "PCI Device ID             : 7195h",CR,LF,"$"
+
+sis7012DetectedMsg db "SiS7012 AC'97 Sound Controller detected.",CR,LF,
+                      "(Untested model, let me know on GitHub whether it works or not!)",CR,LF,
+                      "PCI Vendor ID             : 1039h",CR,LF,
+                      "PCI Device ID             : 7012h",CR,LF,"$"
 
 subsystemIdMsg db       "Device Subsystem ID       : $"
 subsystemVendorIdMsg db "Device Subsystem Vendor ID: $"

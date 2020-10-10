@@ -8,8 +8,11 @@ sep 02 2002
 
 (With some small modifications/additions made by Volkert de Buisonjé)
 
-Uses AC'97 audio on supported Intel chipsets
-(ICH/ICH0/ICH2/ICH3/ICH4/ICH5/ESB/ICH6/ICH7 southbridge, or 440MX chipset)
+Uses AC'97 audio on supported chipsets:
+
+* Intel: ICH/ICH0/ICH2/ICH3/ICH4/ICH5/ESB/ICH6/ICH7 southbridge, or 440MX chipset
+* SiS7012
+
 No drivers required. (there aren't any for DOS anyway!)
 
 
@@ -39,6 +42,8 @@ implement proper .wav header parsing.  You get what you pay for.]
 (first generation) ICH has been successfully tested in both QEMU+KVM and
 VirtualBox VMs, but has yet to be tested on actual hardware. Other ICHes (up to
 ICH7) should be compatible with the the ICH2 but these haven't been tested yet.
+Also the SiS7012 AC'97 Sound Controller should now be supported, but this too
+is as of yet untested.
 If you have tested with any of these chipsets, please share your findings!
 
 3) ONLY supports 16bit samples, stereo format .wav files.  Multiple sample

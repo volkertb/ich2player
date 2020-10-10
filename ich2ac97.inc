@@ -21,7 +21,7 @@
 ; * ICH7 is the last generation to support AC'97 Audio (ICH8 and onwards support Intel HD Audio only)
 ; * The 440MX is not in the ICH family, but does support AC'97 Audio (mobile chipset with integrated north/southbridge)
 ;
-INTEL_VID       equ     8086h           ; Intel's PCI vendor ID
+INTEL_VID       equ     8086h           ; vendor ID: Intel
 ICH_DID         equ     2415h           ; device ID: 82801AA AC'97 Audio Controller (ICH)
 ICH0_DID        equ     2425h           ; device ID: 82801AB AC'97 Audio Controller (ICH0)
 ICH2_DID        equ     2445h           ; device ID: 82801BA/BAM AC'97 Audio Controller (ICH2)
@@ -32,7 +32,10 @@ ESB_DID         equ     25a6h           ; device ID: 6300ESB AC'97 Audio Control
 ICH6_DID        equ     266eh           ; device ID: 82801FB/FBM/FR/FW/FRW AC'97 Audio Controller (ICH6)
 ICH7_DID        equ     27deh           ; device ID: 82801GB/GBM/GR/GH/GHM AC'97 Audio Controller (ICH7)
 I440MX_DID      equ     7195h           ; device ID: 82440MX AC'97 Audio Controller (440MX)
-                                        ; TODO: add any non-Intel AC'97 audio devices that are compatible as well
+
+; Other (non-Intel) vendors that are (mostly) compatible with ICHx AC'97 audio
+SIS_VID         equ     1039h           ; vendor ID: Silicon Integrated Systems (SiS)
+SIS_7012_DID    equ     7012h           ; device ID: SiS7012 AC'97 Sound Controller
 
 NAMBAR_REG      equ     10h             ; native audio mixer BAR
  NAM_SIZE       equ     256             ; 256 bytes required.
@@ -54,6 +57,8 @@ NABMBAR_REG     equ     14h             ; native audio bus mastering BAR
 PI_BDBAR_REG            equ     0       ; PCM in buffer descriptor BAR
 PO_BDBAR_REG            equ     10h     ; PCM out buffer descriptor BAR
 MC_BDBAR_REG            equ     20h     ; MIC in buffer descriptor BAR
+
+CUSTOM_SIS_7012_REG             equ     0x4c    ; SiS7012-specific register, required for unmuting output
 
 ; each buffer descriptor BAR holds a pointer which has entries to the buffer
 ; contents of the .WAV file we're going to play.  Each entry is 8 bytes long
